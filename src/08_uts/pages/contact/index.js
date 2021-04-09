@@ -5,8 +5,12 @@ import ContactImg3 from '../../assets/img/tm-img-240x120-1.jpg';
 import ContactImg4 from '../../assets/img/tm-img-240x120-2.jpg';
 import ContactImg5 from '../../assets/img/tm-img-240x120-2.jpg';
 
-import Maps from '../../assets/maps/index';
+// import Maps from '../../assets/maps/index';
 import '../../assets/css/templatemo-style.css';
+
+import maps from '../../assets/maps.json';
+
+
 
 export default function Contact(){
     return(
@@ -46,9 +50,11 @@ export default function Contact(){
                             <section class="tm-margin-t-mid tm-map-section">
                                 <h3 class="tm-gold-text tm-form-title">Pellentesque fermentum mauris</h3>
 
-                                <div id="google-map">
-                                    <Maps/>
-                                </div>
+                                    {
+                                        maps.map((map)=>{
+                                            return <iframe src={map.src} width="533" height="300" allowfullscreen="" loading="lazy"></iframe>
+                                        })
+                                    }
                                 
     
                                 <p class="tm-form-description">Morbi vel pharetra massa, non iaculis tortor. Nulla porttitor tincidunt felis et feugiat. Vivamus fermentum ligula justo, sit amet blandit nisl volutpat id.</p>

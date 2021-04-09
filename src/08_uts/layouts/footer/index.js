@@ -1,9 +1,12 @@
+import React from 'react';
 import GambarFooter1 from '../../assets/img/tm-img-100x100-1.jpg';
 import GambarFooter2 from '../../assets/img/tm-img-100x100-2.jpg';
 import GambarFooter3 from '../../assets/img/tm-img-100x100-3.jpg';
 import GambarFooter4 from '../../assets/img/tm-img-100x100-4.jpg';
 import GambarFooter5 from '../../assets/img/tm-img-100x100-5.jpg';
 import GambarFooter6 from '../../assets/img/tm-img-100x100-6.jpg';
+
+
 
 export default function Footer(){
     return(
