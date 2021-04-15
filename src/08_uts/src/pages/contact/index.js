@@ -8,7 +8,8 @@ import ContactImg5 from '../../assets/img/tm-img-240x120-2.jpg';
 // import Maps from '../../assets/maps/index';
 import '../../assets/css/templatemo-style.css';
 
-import maps from '../../assets/maps.json';
+import maps from '../../service/maps.json';
+import ButtonSubmit from '../../components/Button/ButtonSubmit/index.js';
 
 
 
@@ -43,7 +44,8 @@ export default function Contact(){
                                         <textarea id="contact_message" name="contact_message" class="form-control" rows="6" placeholder="Message" required></textarea>
                                     </div>
                                 
-                                    <button type="submit" class="tm-btn">Submit</button>                          
+                                    {/* <button type="submit" class="tm-btn">Submit</button>*/}
+                                    <ButtonSubmit content="Submit" tipe="button"/>
                                 </form>   
                             </section>
                             

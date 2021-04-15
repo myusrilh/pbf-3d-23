@@ -2,6 +2,7 @@ import {
     Link
 } from "react-router-dom";
 
+import Button from '../../components/Button/ButtonToggle/index.js';
 
 import {Container,Nav,NavbarBrand} from 'react-bootstrap';
 
@@ -14,10 +15,12 @@ export default function Navbar(){
                 
                 <Nav className="navbar tm-main-nav">
 
-                    <button className="navbar-toggler hidden-md-up" type="button" data-toggle="collapse" data-target="#tmNavbar">
+                    {/* <button className="navbar-toggler hidden-md-up" type="button" data-toggle="collapse" data-target="#tmNavbar">
                         &#9776;
-                    </button>
-                    
+                    </button> */}
+                    <Button content="&#9776;"/>
+
+
                     <div className="collapse navbar-toggleable-sm" id="tmNavbar">
                         <ul className="nav navbar-nav">
                             <li className="nav-item">
@@ -34,7 +37,7 @@ export default function Navbar(){
                             </li>
                         </ul>                        
                     </div>
-                </Nav>  
+                </Nav>
                 
             </div>                                  
         </Container>            

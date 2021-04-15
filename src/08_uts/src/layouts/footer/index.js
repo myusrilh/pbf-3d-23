@@ -6,8 +6,6 @@ import GambarFooter4 from '../../assets/img/tm-img-100x100-4.jpg';
 import GambarFooter5 from '../../assets/img/tm-img-100x100-5.jpg';
 import GambarFooter6 from '../../assets/img/tm-img-100x100-6.jpg';
 
-
-
 export default function Footer(){
     return(
         <footer className="tm-footer">

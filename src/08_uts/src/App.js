@@ -5,7 +5,9 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+
 import React from 'react';
+
 import Navbar from './layouts/navbar/index';
 import Footer from './layouts/footer/index';
 import AboutPage from './pages/aboutpage/index';
@@ -15,7 +17,6 @@ import BlogPage from './pages/blog/index';
 
 import './assets/css/templatemo-style.css';
 import './assets/css/bootstrap.min.css';
-
 
 function Home(){
   return <HomePage/>;
@@ -31,6 +32,13 @@ function Contact(){
   return <ContactPage/>;
 }
 
+// function Footer(){
+//   return(
+//     <Provider store={store}>
+//       <FooterTemplate/>
+//     </Provider>
+//   );
+// }
 
 export default function App(){
   return(
