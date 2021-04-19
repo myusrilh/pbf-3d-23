@@ -3,6 +3,7 @@ import API from '../services/index.js';
 import {Button, Form, Row, Col} from 'react-bootstrap';
 
 
+
 function DaftarArtikel(props){
     return(
         <div>
@@ -80,28 +81,29 @@ export default class BlogPost extends React.Component{
         const {dataArtikel, postArtikel} = this.state;
 
         return(
-            <div>
                 <div>
-                    <Form onSubmit={this.handleTombolSimpan}>
-                        <Form.Group controlId="formBasicJudulArtikel">
-                            <Form.Label>Judul Artikel:</Form.Label>
-                            <Form.Control type="text" name="title" defaultValue={postArtikel.title} onChange={this.handleOnChange} />
-                        </Form.Group>
-                        <Form.Group controlId="formBasicIsiArtikel">
-                            <Form.Label>Isi Artikel:</Form.Label>
-                            <Form.Control type="text" name="body" defaultValue={postArtikel.body} onChange={this.handleOnChange} />
-                        </Form.Group>
-                        <Button variant="primary" type="submit" value="Simpan">Simpan</Button>
-                    </Form>
+                    <div>
+                        
+                            <Form onSubmit={this.handleTombolSimpan}>
+                                <Form.Group controlId="formBasicJudulArtikel">
+                                    <Form.Label>Judul Artikel:</Form.Label>
+                                    <Form.Control type="text" name="title" defaultValue={postArtikel.title} onChange={this.handleOnChange} />
+                                </Form.Group>
+                                <Form.Group controlId="formBasicIsiArtikel">
+                                    <Form.Label>Isi Artikel:</Form.Label>
+                                    <Form.Control type="text" name="body" defaultValue={postArtikel.body} onChange={this.handleOnChange} />
+                                </Form.Group>
+                                <Button variant="primary" type="submit" value="Simpan">Simpan</Button>
+                            </Form>
+                    </div>
+                <hr></hr>
+                <h2>Daftar Artikel</h2>
+                    {
+                        dataArtikel.map(artikel=>{
+                        return <DaftarArtikel key={artikel.id} judul={artikel.title} isiArtikel={artikel.body} nilai={() => {this.handleOnDelete(artikel.id)}} />
+                        })
+                    }
                 </div>
-            <hr></hr>
-            <h2>Daftar Artikel</h2>
-                {
-                    dataArtikel.map(artikel=>{
-                    return <DaftarArtikel key={artikel.id} judul={artikel.title} isiArtikel={artikel.body} nilai={() => {this.handleOnDelete(artikel.id)}} />
-                    })
-                }
-            </div>
         );
 
     }
