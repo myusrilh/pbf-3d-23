@@ -1,7 +1,25 @@
 import React from 'react';
 import API from '../services/index.js';
+import Comment from '../services/Komentar/komentar.js';
 import {Button, Form, Row, Col} from 'react-bootstrap';
 
+function Komentar(props){
+    return(
+        <div>
+            <hr></hr>
+                <Row>
+                    <Col>
+                        <p>{props.nama}</p>
+                        <p>{props.komentar}</p>
+                    </Col>
+                    <Col>
+                        <Button variant="outline-danger" onClick={props.hapus} >Delete</Button>
+                    </Col>
+                </Row>
+            <hr></hr>
+      </div>
+    );
+}
 
 
 function DaftarArtikel(props){
@@ -32,6 +50,12 @@ export default class BlogPost extends React.Component{
                 userId: 1,
                 title: '',
                 body: ''
+            },
+            dataKomentar:[],
+            postKomentar:{
+                userId: 1,
+                nama: '',
+                komentar: ''
             }
         }
     }
@@ -44,8 +68,17 @@ export default class BlogPost extends React.Component{
         })
     }
 
+    ambilDataKomentar = () =>{
+        Comment.getKomentar().then(result => {
+            this.setState({
+                dataKomentar: result
+            })
+        })
+    }
+
     componentDidMount(){
-        this.ambilDataDariServerAPI()
+        this.ambilDataDariServerAPI();
+        this.ambilDataKomentar();
     }
 
     handleTombolSimpan = (e) => {
@@ -57,16 +90,37 @@ export default class BlogPost extends React.Component{
             alert('Data berhasil disimpan!');
           });
     }
+    
+    kirimKomentar = (e) => {
+        e.preventDefault();
+    
+        Comment.postKomentar(this.state.postKomentar)
+          .then((response) => {
+            this.ambilDataKomentar();    // refresh data
+            alert('Komentar berhasil dipost!');
+          });
+    }
 
     handleOnChange = (e) => {
-    let name = e.target.name;
-    let value = e.target.value;
-    this.setState(prevState => {
-        prevState.postArtikel[name] = value;
-        return {
-        postArtikel: prevState.postArtikel
-        };
-    });
+        let name = e.target.name;
+        let value = e.target.value;
+        this.setState(prevState => {
+            prevState.postArtikel[name] = value;
+            return {
+            postArtikel: prevState.postArtikel
+            };
+        });
+    }
+    
+    komentarOnChange = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        this.setState(prevState => {
+            prevState.postKomentar[name] = value;
+            return {
+            postKomentar: prevState.postKomentar
+            };
+        });
     }
 
     handleOnDelete = (id) =>{
@@ -77,8 +131,19 @@ export default class BlogPost extends React.Component{
             alert('Data berhasil dihapus');
         })
     }
+    
+    hapusKomentar = (id) =>{
+
+        Comment.deleteKomentar(id)
+        .then((response) =>{
+            this.ambilDataKomentar();
+            alert('Komentar berhasil dihapus');
+        })
+    }
+
+
     render(){
-        const {dataArtikel, postArtikel} = this.state;
+        const {dataArtikel, postArtikel, dataKomentar} = this.state;
 
         return(
                 <div>
@@ -103,6 +168,28 @@ export default class BlogPost extends React.Component{
                         return <DaftarArtikel key={artikel.id} judul={artikel.title} isiArtikel={artikel.body} nilai={() => {this.handleOnDelete(artikel.id)}} />
                         })
                     }
+                    <hr></hr>
+                    <h5>Komentar</h5>
+                        {
+                            dataKomentar.map(comment=>{
+                                return (
+                                <div>
+                                    <Komentar key={comment.id} nama={comment.nama} komentar={comment.komentar} hapus={() => {this.hapusKomentar(comment.id)}} />
+                                </div>
+                                );
+                            })
+                        }
+                        <Form onSubmit={this.kirimKomentar}>
+                            <Form.Group controlId="formBasicNama">
+                                <Form.Label>Nama:</Form.Label>
+                                <Form.Control type="text" name="nama" defaultValue={dataKomentar.nama} onChange={this.komentarOnChange} />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicKomentar">
+                                <Form.Label>Komentar:</Form.Label>
+                                <Form.Control type="text" name="komentar" defaultValue={dataKomentar.komentar} onChange={this.komentarOnChange} />
+                            </Form.Group>
+                            <Button variant="outline-primary" type="submit" value="Simpan">Post</Button>
+                        </Form>
                 </div>
         );
 

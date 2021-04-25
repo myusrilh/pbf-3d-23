@@ -576,5 +576,13 @@
       "title": "quaerat velit veniam amet cupiditate aut numquam ut sequi",
       "body": "in non odio excepturi sint eum\nlabore voluptates vitae quia qui et\ninventore itaque rerum\nveniam non exercitationem delectus aut"
     }
+  ],
+  "comments": [
+    {
+      "userId": 1,
+      "id": 1,
+      "nama": "jono",
+      "komentar": "Artikel ini sangat bagus"
+    }
   ]
 }
