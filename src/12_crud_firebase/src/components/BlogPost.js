@@ -3,6 +3,7 @@ import API from '../services/index.js';
 import Comment from '../services/Komentar/komentar.js';
 import { Button, Container, Form, Row, Col } from 'react-bootstrap';
 import { DB } from '../firebase.config';
+import firebase from 'firebase/app';
 
 function Komentar(props){
     return(
@@ -48,13 +49,13 @@ export default class BlogPost extends React.Component{
         this.state = {
             dataArtikel:[], //untuk menampung data API
             postArtikel:{
-                userId: 1,
+                userId: firebase.auth().currentUser.email,
                 title: '',
                 body: ''
             },
             dataKomentar:[],
             postKomentar:{
-                userId: 1,
+                userId: firebase.auth().currentUser.email,
                 nama: '',
                 komentar: ''
             }
@@ -110,7 +111,7 @@ export default class BlogPost extends React.Component{
         } else if (postArtikel.title && postArtikel.body) {
             console.log(dataArtikel);
             const id = new Date().getTime().toString();
-            let userId = 1; // TODO: set to username/email
+            let userId = firebase.auth().currentUser.email; // TODO: set to username/email
             let title = postArtikel.title;
             let body = postArtikel.body;
             dataArtikel.push({ id, userId, title, body });
@@ -155,13 +156,17 @@ export default class BlogPost extends React.Component{
         });
     }
 
-    handleOnDelete = (id) =>{
-
-        API.deleteNewsBlog(id)
-        .then((response) =>{
-            this.ambilDataDariServerAPI();
-            alert('Data berhasil dihapus');
-        })
+    handleTombolHapus = (e) => {
+        e.preventDefault();
+    
+        const { dataArtikel } = this.state;
+    
+        const newState = dataArtikel.filter(data => {
+          return data.id !== e.target.value;
+        });
+        
+        this.setState({ dataArtikel: newState });
+        alert('Data berhasil dihapus!');
     }
     
     hapusKomentar = (id) =>{
