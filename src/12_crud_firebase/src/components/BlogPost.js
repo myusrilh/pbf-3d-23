@@ -108,22 +108,21 @@ export default class BlogPost extends React.Component{
             });
             dataArtikel[indeksArtikel].title = postArtikel.title;
             dataArtikel[indeksArtikel].body = postArtikel.body;
-            this.setState({ dataArtikel });
-
+            // this.setState({ dataArtikel });
+            
         } else if (postArtikel.title && postArtikel.body) {
-            console.log(dataArtikel);
             const id = new Date().getTime().toString();
             let userId = firebase.auth().currentUser.email; // TODO: set to username/email
             let title = postArtikel.title;
             let body = postArtikel.body;
             dataArtikel.push({ id, userId, title, body });
-            this.setState({ dataArtikel });
+            // this.setState({ dataArtikel });
         }
-    
+        
         postArtikel.id = '';
         postArtikel.title = '';
         postArtikel.body = '';
-        this.setState({ postArtikel });
+        this.setState({ postArtikel, dataArtikel});
     }
     
     kirimKomentar = (e) => {
@@ -176,38 +175,48 @@ export default class BlogPost extends React.Component{
     
         const { dataArtikel, postArtikel } = this.state;
         
-        const updateData = dataArtikel.find(data =>{
+        const insertPostArtikel = dataArtikel.find(data =>{
             return data.id === e.target.value
         });
-        postArtikel.id = new Date().getTime().toString();
-        updateData.id = postArtikel.id;
+        // postArtikel.id = new Date().getTime().toString();
+        // postArtikel.id = e.target.value;
+        // updateData.id = postArtikel.id;
         
-        this.setState({postArtikel, showEdit: true });
+        this.setState({postArtikel:insertPostArtikel, showEdit: true });
       }
 
-      handleUpdateArtikel = (e) =>{
+      handleTombolBatal = (e) =>{
         e.preventDefault();
-        const { dataArtikel, postArtikel } = this.state;
-
-        if (postArtikel.id !== null) {
-            let id = postArtikel.id;
-            const updateState = dataArtikel.find(data => {
-                return data.id === postArtikel.id
-            });
-            updateState.userId = firebase.auth().currentUser.email;
-            updateState.title = postArtikel.title;
-            updateState.body = postArtikel.body;
-            console.log(updateState);
-            console.log(dataArtikel);
-            console.log(postArtikel);
-            console.log(e.target);
-        }
+        const { postArtikel } = this.state;
 
         postArtikel.id = '';
-        postArtikel.title = '';
-        postArtikel.body = '';
+
         this.setState({postArtikel, showEdit: false });
-    }
+      }
+
+    //   handleUpdateArtikel = (e) =>{
+    //     e.preventDefault();
+    //     const { dataArtikel, postArtikel } = this.state;
+
+    //     if (postArtikel.id !== null) {
+    //         let id = postArtikel.id;
+    //         const updateState = dataArtikel.find(data => {
+    //             return data.id === postArtikel.id
+    //         });
+    //         updateState.userId = firebase.auth().currentUser.email;
+    //         updateState.title = postArtikel.title;
+    //         updateState.body = postArtikel.body;
+    //         console.log(updateState);
+    //         console.log(dataArtikel);
+    //         console.log(postArtikel);
+    //         console.log(e.target);
+    //     }
+
+    //     postArtikel.id = '';
+    //     postArtikel.title = '';
+    //     postArtikel.body = '';
+    //     this.setState({postArtikel, showEdit: false });
+    // }
 
     
     hapusKomentar = (id) =>{
@@ -222,6 +231,9 @@ export default class BlogPost extends React.Component{
 
     render(){
         const { dataArtikel, showEdit, postArtikel } = this.state;
+        const indexArtikel = dataArtikel.findIndex(data => {
+            return data.id === postArtikel.id
+        });
 
         return (
             <div>
@@ -268,7 +280,7 @@ export default class BlogPost extends React.Component{
                     </Modal.Header>
                     <Modal.Body>
                         <Container>
-                        <Form onSubmit={this.handleUpdateArtikel}>
+                        <Form onSubmit={this.handleTombolSimpan}>
                             <Form.Group controlId="inputJudul">
                             <Form.Label>Judul Artikel</Form.Label>
                             <Form.Control required type="text" name="title" value={postArtikel.title} placeholder="judul artikel" onChange={this.handleOnChange} />
@@ -277,14 +289,14 @@ export default class BlogPost extends React.Component{
                             <Form.Label>Isi Artikel</Form.Label>
                             <Form.Control required name="body" value={postArtikel.body} placeholder="isi artikel" onChange={this.handleOnChange} as="textarea" rows={3} />
                             </Form.Group>
-                            <Button variant="primary" type="submit">
+                            <Button variant="primary" type="submit" onClick={() => this.setState({ showEdit: false })}>
                             Update Artikel
                         </Button>
                         </Form>
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="danger" onClick={() => this.setState({ showEdit: false })}>Batal</Button>
+                        <Button variant="danger" onClick={this.handleTombolBatal}>Batal</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
