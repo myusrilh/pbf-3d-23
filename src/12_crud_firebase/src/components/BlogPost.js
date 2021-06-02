@@ -1,7 +1,7 @@
 import React from 'react';
 import API from '../services/index.js';
 import Comment from '../services/Komentar/komentar.js';
-import { Button, Container, Form, Row, Col } from 'react-bootstrap';
+import { Button, Container, Form, Row, Col, Modal } from 'react-bootstrap';
 import { DB } from '../firebase.config';
 import firebase from 'firebase/app';
 
@@ -47,8 +47,10 @@ export default class BlogPost extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            showEdit: false,
             dataArtikel:[], //untuk menampung data API
             postArtikel:{
+                id: '',
                 userId: firebase.auth().currentUser.email,
                 title: '',
                 body: ''
@@ -140,7 +142,7 @@ export default class BlogPost extends React.Component{
         this.setState(prevState => {
             prevState.postArtikel[name] = value;
             return {
-            postArtikel: prevState.postArtikel
+                postArtikel: prevState.postArtikel
             };
         });
     }
@@ -168,6 +170,45 @@ export default class BlogPost extends React.Component{
         this.setState({ dataArtikel: newState });
         alert('Data berhasil dihapus!');
     }
+
+    handleTombolEdit = (e) => {
+        e.preventDefault();
+    
+        const { dataArtikel, postArtikel } = this.state;
+        
+        const updateData = dataArtikel.find(data =>{
+            return data.id === e.target.value
+        });
+        postArtikel.id = new Date().getTime().toString();
+        updateData.id = postArtikel.id;
+        
+        this.setState({postArtikel, showEdit: true });
+      }
+
+      handleUpdateArtikel = (e) =>{
+        e.preventDefault();
+        const { dataArtikel, postArtikel } = this.state;
+
+        if (postArtikel.id !== null) {
+            let id = postArtikel.id;
+            const updateState = dataArtikel.find(data => {
+                return data.id === postArtikel.id
+            });
+            updateState.userId = firebase.auth().currentUser.email;
+            updateState.title = postArtikel.title;
+            updateState.body = postArtikel.body;
+            console.log(updateState);
+            console.log(dataArtikel);
+            console.log(postArtikel);
+            console.log(e.target);
+        }
+
+        postArtikel.id = '';
+        postArtikel.title = '';
+        postArtikel.body = '';
+        this.setState({postArtikel, showEdit: false });
+    }
+
     
     hapusKomentar = (id) =>{
 
@@ -180,7 +221,7 @@ export default class BlogPost extends React.Component{
 
 
     render(){
-        const { dataArtikel } = this.state;
+        const { dataArtikel, showEdit, postArtikel } = this.state;
 
         return (
             <div>
@@ -195,7 +236,7 @@ export default class BlogPost extends React.Component{
                     <Form.Control required name="body" onChange={this.handleOnChange} as="textarea" rows={3} />
                     </Form.Group>
                     <Button variant="primary" type="submit">
-                    Simpan Artikel
+                        Simpan Artikel
                     </Button>
                 </Form>
                 </Container>
@@ -207,12 +248,45 @@ export default class BlogPost extends React.Component{
                     return (
                     <div key={artikel.id}>
                         <DaftarArtikel judul={artikel.title} isiArtikel={artikel.body} />
+                        <Button variant="info" value={artikel.id} onClick={this.handleTombolEdit} >Edit</Button>
                         <Button variant="danger" value={artikel.id} onClick={this.handleTombolHapus}>Hapus</Button>
                         <hr></hr>
                     </div>
                     )
                 })
                 }
+                <Modal
+                    show={showEdit}
+                    onHide={() => this.setState({ showEdit: false })}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                        Edit Artikel
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Container>
+                        <Form onSubmit={this.handleUpdateArtikel}>
+                            <Form.Group controlId="inputJudul">
+                            <Form.Label>Judul Artikel</Form.Label>
+                            <Form.Control required type="text" name="title" value={postArtikel.title} placeholder="judul artikel" onChange={this.handleOnChange} />
+                            </Form.Group>
+                            <Form.Group controlId="inputIsiArtikel">
+                            <Form.Label>Isi Artikel</Form.Label>
+                            <Form.Control required name="body" value={postArtikel.body} placeholder="isi artikel" onChange={this.handleOnChange} as="textarea" rows={3} />
+                            </Form.Group>
+                            <Button variant="primary" type="submit">
+                            Update Artikel
+                        </Button>
+                        </Form>
+                        </Container>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="danger" onClick={() => this.setState({ showEdit: false })}>Batal</Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         );
 
